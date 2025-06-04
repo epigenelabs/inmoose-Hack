@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
+from typing import List, Optional
 import numpy as np
 import pandas as pd
 from scipy.stats import combine_pvalues, false_discovery_control
@@ -23,7 +24,11 @@ from statsmodels.stats.meta_analysis import combine_effects
 from .DEResults import DEResults
 
 
-def meta_de(de_results, alpha=0.05, min_common_genes=None):
+def meta_de(
+    de_results: List[DEResults], 
+    alpha: float = 0.05, 
+    min_common_genes: Optional[int] = None
+) -> pd.DataFrame:
     """
     Combine logFC and *p*-values of differential expression analyses
 

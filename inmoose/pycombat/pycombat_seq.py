@@ -18,6 +18,7 @@
 
 # This file is based on the file 'R/ComBat_seq.R' of the Bioconductor sva package (version 3.44.0).
 
+from typing import Union, Optional, Any
 import numpy as np
 import pandas as pd
 
@@ -28,15 +29,15 @@ from .helper_seq import match_quantiles, vec2mat
 
 
 def pycombat_seq(
-    counts,
-    batch,
-    covar_mod=None,
-    shrink=False,
-    shrink_disp=False,
-    gene_subset_n=None,
-    ref_batch=None,
-    na_cov_action="raise",
-):
+    counts: Union[np.ndarray, pd.DataFrame],
+    batch: Union[list, np.ndarray, str],
+    covar_mod: Optional[Union[list, np.ndarray, pd.DataFrame]] = None,
+    shrink: bool = False,
+    shrink_disp: bool = False,
+    gene_subset_n: Optional[int] = None,
+    ref_batch: Optional[Any] = None,
+    na_cov_action: str = "raise",
+) -> Union[np.ndarray, pd.DataFrame]:
     """pycombat_seq is an improved model from ComBat using negative binomial regression, which specifically targets RNA-Seq count data.
 
     Arguments
@@ -113,7 +114,7 @@ def pycombat_seq(
     LOGGER.info("Estimating dispersions")
 
     # Estimate common dispersion within each batch as an initial value
-    def disp_common_helper(i):
+    def disp_common_helper(i: str) -> float:
         if (
             batch_sizes[i] <= design.shape[1] - batchmod.shape[1] + 1
             or np.linalg.matrix_rank(mod[batches_ind[i]]) < mod.shape[1]
@@ -133,7 +134,7 @@ def pycombat_seq(
     disp_common = {b: disp_common_helper(b) for b in batch.categories}
 
     # Estimate gene-wise dispersion within each batch
-    def genewise_disp_helper(i):
+    def genewise_disp_helper(i: str) -> list:
         if (
             batch_sizes[i] <= design.shape[1] - batchmod.shape[1] + 1
             or np.linalg.matrix_rank(mod[batches_ind[i]]) < mod.shape[1]

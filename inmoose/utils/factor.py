@@ -1,4 +1,4 @@
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (C) 2022-2023 M. Colange
 
 # This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 from pandas import Categorical
@@ -41,20 +41,43 @@ class Factor(Categorical):
 
     def droplevels(self):
         """
-        drop unused levels
+        Drop unused levels
+
+        Returns
+        -------
+        Factor
+            a new Factor object with unused levels removed
         """
 
         return Factor(self.__array__())
 
     def nlevels(self):
         """
-        the number of levels
+        Get the number of levels
+
+        Returns
+        -------
+        int
+            the number of levels
         """
 
         return len(self.categories)
 
 
 def asfactor(g):
+    """
+    Convert an array-like object to a Factor
+
+    Parameters
+    ----------
+    g : array_like
+        The object to convert to a Factor
+
+    Returns
+    -------
+    Factor
+        A Factor object based on the input
+    """
     if type(g) is Factor:
         return g
     else:
@@ -62,6 +85,21 @@ def asfactor(g):
 
 
 def gl(n, k):
+    """
+    Generate factor levels
+
+    Parameters
+    ----------
+    n : int
+        The number of levels
+    k : int
+        The number of replications for each level
+
+    Returns
+    -------
+    Factor
+        A Factor object with generated levels
+    """
     arr = []
     for i in range(1, n + 1):
         arr.extend([i for j in range(k)])

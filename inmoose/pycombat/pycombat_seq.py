@@ -1,4 +1,4 @@
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (C) 2019-2020 Yuqing Zhang
 # Copyright (C) 2022-2023 Maximilien Colange
 
@@ -14,10 +14,11 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # This file is based on the file 'R/ComBat_seq.R' of the Bioconductor sva package (version 3.44.0).
 
+from typing import Union, Optional, Any
 import numpy as np
 import pandas as pd
 
@@ -28,15 +29,15 @@ from .helper_seq import match_quantiles, vec2mat
 
 
 def pycombat_seq(
-    counts,
-    batch,
-    covar_mod=None,
-    shrink=False,
-    shrink_disp=False,
-    gene_subset_n=None,
-    ref_batch=None,
-    na_cov_action="raise",
-):
+    counts: Union[np.ndarray, pd.DataFrame],
+    batch: Union[list, np.ndarray, str],
+    covar_mod: Optional[Union[list, np.ndarray, pd.DataFrame]] = None,
+    shrink: bool = False,
+    shrink_disp: bool = False,
+    gene_subset_n: Optional[int] = None,
+    ref_batch: Optional[Any] = None,
+    na_cov_action: str = "raise",
+) -> Union[np.ndarray, pd.DataFrame]:
     """pycombat_seq is an improved model from ComBat using negative binomial regression, which specifically targets RNA-Seq count data.
 
     Arguments
@@ -47,14 +48,14 @@ def pycombat_seq(
         Batch indices. Must have as many elements as the number of columns in the expression matrix.
     covar_mod : list or matrix, optional
         model matrix (dataframe, list or numpy array) for one or multiple covariates to include in linear model (signal
-        from these variables are kept in data after adjustment). Covariates have to be categorial,
-        they can not be continious values (default: `None`).
+        from these variables are kept in data after adjustment). Covariates have to be categorical,
+        they can not be continuous values (default: `None`).
     shrink : bool, optional
-        whether to apply shrinkage on parameter estimation
+        whether to apply shrinkage on parameter estimation (default: `False`)
     shrink_disp : bool, optional
-        whether to apply shrinkage on dispersion
+        whether to apply shrinkage on dispersion (default: `False`)
     gene_subset_n : int, optional
-        number of genes to use in emprirical Bayes estimation, only useful when shrink = True
+        number of genes to use in empirical Bayes estimation, only useful when shrink = True (default: `None`)
     ref_batch : any, optional
         batch id of the batch to use as reference (default: `None`)
     na_cov_action : str
@@ -70,7 +71,7 @@ def pycombat_seq(
     -------
     matrix
         the input expression matrix adjusted for batch effects.
-        same type as the input `data`
+        same type as the input `counts`
     """
 
     ####### Preparation #######
@@ -113,7 +114,7 @@ def pycombat_seq(
     LOGGER.info("Estimating dispersions")
 
     # Estimate common dispersion within each batch as an initial value
-    def disp_common_helper(i):
+    def disp_common_helper(i: str) -> float:
         if (
             batch_sizes[i] <= design.shape[1] - batchmod.shape[1] + 1
             or np.linalg.matrix_rank(mod[batches_ind[i]]) < mod.shape[1]
@@ -133,7 +134,7 @@ def pycombat_seq(
     disp_common = {b: disp_common_helper(b) for b in batch.categories}
 
     # Estimate gene-wise dispersion within each batch
-    def genewise_disp_helper(i):
+    def genewise_disp_helper(i: str) -> list:
         if (
             batch_sizes[i] <= design.shape[1] - batchmod.shape[1] + 1
             or np.linalg.matrix_rank(mod[batches_ind[i]]) < mod.shape[1]

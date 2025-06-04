@@ -1,4 +1,4 @@
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (C) 2024 M. Colange
 
 # This program is free software: you can redistribute it and/or modify
@@ -13,8 +13,9 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
+from typing import List, Optional
 import numpy as np
 import pandas as pd
 from scipy.stats import combine_pvalues, false_discovery_control
@@ -23,7 +24,11 @@ from statsmodels.stats.meta_analysis import combine_effects
 from .DEResults import DEResults
 
 
-def meta_de(de_results, alpha=0.05, min_common_genes=None):
+def meta_de(
+    de_results: List[DEResults], 
+    alpha: float = 0.05, 
+    min_common_genes: Optional[int] = None
+) -> pd.DataFrame:
     """
     Combine logFC and *p*-values of differential expression analyses
 
@@ -42,13 +47,13 @@ def meta_de(de_results, alpha=0.05, min_common_genes=None):
         the use-case, it can be results obtained with different tools on the
         same dataset, results obtained with the same tool on different
         datasets, or any combination thereof
-    alpha : float between 0 and 1
-        significance level for the confidence intervals. Defaults to 0.05.
-    min_common_genes : int or None
+    alpha : float, optional
+        significance level for the confidence intervals, by default 0.05.
+    min_common_genes : int, optional
         minimal number of genes all the elements of :code:`de_results` need to
         have in common. Below this threshold, an error will be raised. If
         :code:`None`, then all elements of :code:`de_results` must have the
-        same set of genes.
+        same set of genes, by default None.
 
     Returns
     -------
@@ -58,7 +63,7 @@ def meta_de(de_results, alpha=0.05, min_common_genes=None):
         - :code:`"combined logFC"`: the combined log-fold-change
         - :code:`"combined logFC (CI_L)"`: the lower bound of the confidence
           interval for the combined log-fold-change
-        - :code:`"combined logFC (CI_R)"`: the lower bound of the confidence
+        - :code:`"combined logFC (CI_R)"`: the upper bound of the confidence
           interval for the combined log-fold-change
         - :code:`"adjusted combined pval"`: the combined *p*-value, adjusted
           for multiple testing

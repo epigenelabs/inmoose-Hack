@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
-
+from typing import Union, Any, List
 from pandas import Categorical
 
 
@@ -27,7 +27,7 @@ class Factor(Categorical):
     methods to mimic R API.
     """
 
-    def __init__(self, arr):
+    def __init__(self, arr: Union[List[Any], tuple, 'Factor']) -> None:
         """
         Constructs a Factor instance from an array
 
@@ -39,7 +39,7 @@ class Factor(Categorical):
 
         super().__init__(arr)
 
-    def droplevels(self):
+    def droplevels(self) -> 'Factor':
         """
         Drop unused levels
 
@@ -51,7 +51,7 @@ class Factor(Categorical):
 
         return Factor(self.__array__())
 
-    def nlevels(self):
+    def nlevels(self) -> int:
         """
         Get the number of levels
 
@@ -64,7 +64,7 @@ class Factor(Categorical):
         return len(self.categories)
 
 
-def asfactor(g):
+def asfactor(g: Union[List[Any], tuple, 'Factor']) -> 'Factor':
     """
     Convert an array-like object to a Factor
 
@@ -84,7 +84,7 @@ def asfactor(g):
         return Factor(g)
 
 
-def gl(n, k):
+def gl(n: int, k: int) -> 'Factor':
     """
     Generate factor levels
 

@@ -1,4 +1,4 @@
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (C) 2019-2020 Yuqing Zhang
 # Copyright (C) 2022-2023 Maximilien Colange
 
@@ -14,7 +14,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # This file is based on the file 'R/ComBat_seq.R' of the Bioconductor sva package (version 3.44.0).
 
@@ -47,14 +47,14 @@ def pycombat_seq(
         Batch indices. Must have as many elements as the number of columns in the expression matrix.
     covar_mod : list or matrix, optional
         model matrix (dataframe, list or numpy array) for one or multiple covariates to include in linear model (signal
-        from these variables are kept in data after adjustment). Covariates have to be categorial,
-        they can not be continious values (default: `None`).
+        from these variables are kept in data after adjustment). Covariates have to be categorical,
+        they can not be continuous values (default: `None`).
     shrink : bool, optional
-        whether to apply shrinkage on parameter estimation
+        whether to apply shrinkage on parameter estimation (default: `False`)
     shrink_disp : bool, optional
-        whether to apply shrinkage on dispersion
+        whether to apply shrinkage on dispersion (default: `False`)
     gene_subset_n : int, optional
-        number of genes to use in emprirical Bayes estimation, only useful when shrink = True
+        number of genes to use in empirical Bayes estimation, only useful when shrink = True (default: `None`)
     ref_batch : any, optional
         batch id of the batch to use as reference (default: `None`)
     na_cov_action : str
@@ -70,7 +70,7 @@ def pycombat_seq(
     -------
     matrix
         the input expression matrix adjusted for batch effects.
-        same type as the input `data`
+        same type as the input `counts`
     """
 
     ####### Preparation #######
